@@ -14,7 +14,9 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -22,6 +24,7 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
@@ -65,6 +68,11 @@ public final class InvLibExample extends JavaPlugin implements CommandExecutor, 
             case "input" -> openAnvilDemo(player);
             case "trade" -> openMerchantDemo(player);
             case "craft" -> openCraftingDemo(player);
+            case "confirm" -> openConfirmationDemo(player);
+            case "settings" -> openSettingsDemo(player);
+            case "players" -> openPlayerListDemo(player);
+            case "shop" -> openShopDemo(player);
+            case "profile" -> openProfileDemo(player);
             default -> player.sendMessage(mm.deserialize("<red>Unknown subcommand. Use /invlib for the main menu."));
         }
 
@@ -74,7 +82,7 @@ public final class InvLibExample extends JavaPlugin implements CommandExecutor, 
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
         if (args.length == 1) {
-            return Arrays.asList("performance", "animate", "input", "trade", "craft").stream()
+            return Arrays.asList("performance", "animate", "input", "trade", "craft", "confirm", "settings", "players", "shop", "profile").stream()
                     .filter(s -> s.startsWith(args[0].toLowerCase()))
                     .collect(Collectors.toList());
         }
@@ -85,20 +93,23 @@ public final class InvLibExample extends JavaPlugin implements CommandExecutor, 
      * MAIN MENU: Showcases Layouts and Button Binding
      */
     private void openMainMenu(Player player) {
-        String titleStr = getConfig().getString("main-menu.title", "InvLib Showcase");
+        String titleStr = getConfig().getString("main-menu.title", "<gradient:#4e54c8:#8f94fb><bold>InvLib Showcase");
         Material fillerMat = Material.valueOf(getConfig().getString("main-menu.filler-material", "GRAY_STAINED_GLASS_PANE"));
 
-        MenuBuilder.chest(3)
+        MenuBuilder.chest(6)
                 .title(mm.deserialize(titleStr))
                 .layout(
                         "FFFFFFFFF",
-                        "F P A I T",
-                        "FFFFXCFFF"
+                        "F.P.A.I.F",
+                        "F.......F",
+                        "F.T.C.Y.F",
+                        "F.......F",
+                        "FS.R.L.XF"
                 )
                 .bind('F', MenuPresets.filler(fillerMat))
                 .bind('P', ItemBuilder.start(Material.NETHERITE_UPGRADE_SMITHING_TEMPLATE)
                         .name(mm.deserialize("<green><bold>Performance Test"))
-                        .lore(mm.deserialize("<gray>Opens a paged menu with all"), mm.deserialize("<gray>Minecraft items (800+)."))
+                        .lore(mm.deserialize("<gray>Explore all Minecraft items"), mm.deserialize("<gray>in a paged browser."))
                         .build(), e -> openPerformanceDemo(player))
                 .bind('A', ItemBuilder.start(Material.MAGMA_CREAM)
                         .name(mm.deserialize("<light_purple><bold>Animation Gallery"))
@@ -116,6 +127,22 @@ public final class InvLibExample extends JavaPlugin implements CommandExecutor, 
                         .name(mm.deserialize("<yellow><bold>Virtual Crafting"))
                         .lore(mm.deserialize("<gray>A standalone 3x3 grid"), mm.deserialize("<gray>for custom crafting."))
                         .build(), e -> openCraftingDemo(player))
+                .bind('Y', ItemBuilder.start(Material.LIME_CONCRETE)
+                        .name(mm.deserialize("<green><bold>Confirmation Dialog"))
+                        .lore(mm.deserialize("<gray>Simple Yes/No example."))
+                        .build(), e -> openConfirmationDemo(player))
+                .bind('S', ItemBuilder.start(Material.COMPARATOR)
+                        .name(mm.deserialize("<blue><bold>Settings Menu"))
+                        .lore(mm.deserialize("<gray>Interactive toggle examples."))
+                        .build(), e -> openSettingsDemo(player))
+                .bind('R', ItemBuilder.start(Material.PLAYER_HEAD)
+                        .name(mm.deserialize("<aqua><bold>Player Browser"))
+                        .lore(mm.deserialize("<gray>Paged menu of online players."))
+                        .build(), e -> openPlayerListDemo(player))
+                .bind('L', ItemBuilder.start(Material.CHEST)
+                        .name(mm.deserialize("<gold><bold>Shop Categories"))
+                        .lore(mm.deserialize("<gray>Menu navigation example."))
+                        .build(), e -> openShopDemo(player))
                 .bind('X', MenuPresets.close())
                 .open(player);
     }
