@@ -1,12 +1,10 @@
 package me.velmax.invlib;
 
 import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,27 +14,25 @@ import java.util.function.Consumer;
 
 /**
  * The base class for all menus in InvLib.
- * Acts as an InventoryHolder to identify InvLib menus.
+ * Now acts as a container for menu content (buttons and logic).
  */
-public class BaseMenu implements InventoryHolder {
+public class BaseMenu {
 
-    private final Inventory inventory;
+    private final int size;
+    private final InventoryType type;
     private final Map<Integer, MenuButton> buttons = new HashMap<>();
     
     private Consumer<InventoryOpenEvent> openHandler;
     private Consumer<InventoryCloseEvent> closeHandler;
 
-    public BaseMenu(@NotNull InventoryType type, @NotNull Component title) {
-        this.inventory = Bukkit.createInventory(this, type, title);
+    public BaseMenu(@NotNull InventoryType type) {
+        this.size = -1;
+        this.type = type;
     }
 
-    public BaseMenu(int size, @NotNull Component title) {
-        this.inventory = Bukkit.createInventory(this, size, title);
-    }
-
-    @Override
-    public @NotNull Inventory getInventory() {
-        return inventory;
+    public BaseMenu(int size) {
+        this.size = size;
+        this.type = null;
     }
 
     /**
@@ -48,10 +44,8 @@ public class BaseMenu implements InventoryHolder {
     public void setButton(int slot, @Nullable MenuButton button) {
         if (button == null) {
             buttons.remove(slot);
-            inventory.setItem(slot, null);
         } else {
             buttons.put(slot, button);
-            inventory.setItem(slot, button.item());
         }
     }
 
@@ -66,11 +60,29 @@ public class BaseMenu implements InventoryHolder {
     }
 
     /**
+     * Gets all buttons in the menu.
+     *
+     * @return A map of slot to ItemStack for the buttons.
+     */
+    public Map<Integer, ItemStack> getButtons() {
+        Map<Integer, ItemStack> items = new HashMap<>();
+        buttons.forEach((slot, button) -> items.put(slot, button.item()));
+        return items;
+    }
+
+    /**
      * Clears all buttons from the menu.
      */
     public void clearButtons() {
         buttons.clear();
-        inventory.clear();
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public @Nullable InventoryType getType() {
+        return type;
     }
 
     public @Nullable Consumer<InventoryOpenEvent> getOpenHandler() {
@@ -91,10 +103,12 @@ public class BaseMenu implements InventoryHolder {
 
     /**
      * Opens the menu for a player.
+     * This creates a new MenuWindow and opens it.
      *
      * @param player The player to open for.
+     * @param title  The title of the menu.
      */
-    public void open(@NotNull org.bukkit.entity.Player player) {
-        player.openInventory(inventory);
+    public void open(@NotNull org.bukkit.entity.Player player, @NotNull Component title) {
+        new MenuWindow(player, this, title).open();
     }
 }
