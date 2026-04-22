@@ -17,7 +17,10 @@ import java.util.function.Consumer;
 
 /**
  * The base class for all menus in InvLib.
- * Now acts as a container for menu content (buttons and logic).
+ * 
+ * <p>A BaseMenu acts as a container for inventory content, including buttons,
+ * handlers, and layout information. It is decoupled from any specific player view,
+ * allowing it to be shared between multiple viewers simultaneously.</p>
  */
 public class BaseMenu {
 
@@ -31,12 +34,22 @@ public class BaseMenu {
     private Consumer<InventoryOpenEvent> openHandler;
     private Consumer<InventoryCloseEvent> closeHandler;
 
+    /**
+     * Creates a new BaseMenu with a specific inventory type.
+     *
+     * @param type The type of inventory (e.g., CHEST, HOPPER, ANVIL).
+     */
     public BaseMenu(@NotNull InventoryType type) {
         this.size = -1;
         this.type = type;
         ALL_MENUS.add(this);
     }
 
+    /**
+     * Creates a new chest-based BaseMenu with a specific size.
+     *
+     * @param size The number of slots (must be a multiple of 9).
+     */
     public BaseMenu(int size) {
         this.size = size;
         this.type = null;
@@ -46,9 +59,11 @@ public class BaseMenu {
     /**
      * Gets all menus that are currently in memory.
      * Internal use only.
+     *
+     * @return An unmodifiable set of all active menus.
      */
     public static Set<BaseMenu> getAllMenus() {
-        return ALL_MENUS;
+        return Collections.unmodifiableSet(ALL_MENUS);
     }
 
     /**

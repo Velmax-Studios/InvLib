@@ -64,7 +64,7 @@ public final class InventoryManager implements Listener {
     public void onPrepareAnvil(PrepareAnvilEvent event) {
         InventoryHolder holder = event.getInventory().getHolder();
         if (holder instanceof MenuWindow window && window.getContent() instanceof AnvilMenu anvil) {
-            String text = event.getInventory().getRenameText();
+            String text = event.getView().getRenameText();
             anvil.handleRename(text != null ? text : "");
         }
     }

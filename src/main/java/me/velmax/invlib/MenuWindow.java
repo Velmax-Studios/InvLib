@@ -8,7 +8,11 @@ import org.bukkit.inventory.InventoryHolder;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Represents an active inventory view for a specific player.
+ * Represents a specific player's window (session) for a menu.
+ * 
+ * <p>A MenuWindow manages the actual Bukkit Inventory for a single player.
+ * It allows for session-specific state like dynamic titles and localized content,
+ * while being linked to a shared {@link BaseMenu}.</p>
  */
 public final class MenuWindow implements InventoryHolder {
 

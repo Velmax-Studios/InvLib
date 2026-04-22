@@ -4,10 +4,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
- * Represents a layout for an inventory menu using a string-based pattern.
+ * Represents a visual mapping of slots in an inventory.
+ * 
+ * <p>Layouts allow developers to design menus using string patterns, where each
+ * unique character represents a specific slot or group of slots.</p>
  */
 public final class Layout {
 

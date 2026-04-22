@@ -13,12 +13,20 @@ import java.util.List;
 import java.util.function.Consumer;
 
 /**
- * A fluent API for building ItemStacks.
+ * A fluent API for building and modifying ItemStacks.
+ * 
+ * <p>ItemBuilder provides a chainable interface for setting display names,
+ * lore, enchantments, and custom model data with minimal boilerplate.</p>
  */
 public final class ItemBuilder {
 
     private final ItemStack item;
 
+    /**
+     * Creates a new ItemBuilder for a specific material.
+     *
+     * @param material The material of the item.
+     */
     public ItemBuilder(@NotNull Material material) {
         this.item = new ItemStack(material);
     }
