@@ -1,6 +1,7 @@
 package me.velmax.invlib.builder;
 
 import me.velmax.invlib.BaseMenu;
+import me.velmax.invlib.Layout;
 import me.velmax.invlib.MenuButton;
 import net.kyori.adventure.text.Component;
 import org.bukkit.event.inventory.InventoryCloseEvent;
@@ -23,6 +24,7 @@ public final class MenuBuilder {
     private final int size;
     private final InventoryType type;
     
+    private Layout layout;
     private Consumer<InventoryOpenEvent> openHandler;
     private Consumer<InventoryCloseEvent> closeHandler;
 
@@ -44,6 +46,35 @@ public final class MenuBuilder {
 
     public static @NotNull MenuBuilder type(@NotNull InventoryType type, @NotNull Component title) {
         return new MenuBuilder(type, title);
+    }
+
+    public @NotNull MenuBuilder layout(@NotNull String... rows) {
+        this.layout = Layout.create(rows);
+        return this;
+    }
+
+    public @NotNull MenuBuilder bind(char key, @NotNull MenuButton button) {
+        if (layout == null) {
+            throw new IllegalStateException("Cannot bind without a layout. Call layout() first.");
+        }
+        layout.bind(key, button);
+        return this;
+    }
+
+    public @NotNull MenuBuilder bind(char key, @NotNull org.bukkit.inventory.ItemStack item, @Nullable Consumer<org.bukkit.event.inventory.InventoryClickEvent> handler) {
+        return bind(key, MenuButton.of(item, handler));
+    }
+
+    public @NotNull MenuBuilder bind(char key, @NotNull org.bukkit.Material material, @Nullable Consumer<org.bukkit.event.inventory.InventoryClickEvent> handler) {
+        return bind(key, new org.bukkit.inventory.ItemStack(material), handler);
+    }
+
+    public @NotNull MenuBuilder bind(char key, @NotNull ItemBuilder itemBuilder) {
+        return bind(key, MenuButton.of(itemBuilder.build()));
+    }
+
+    public @NotNull MenuBuilder bind(char key, @NotNull ItemBuilder itemBuilder, @Nullable Consumer<org.bukkit.event.inventory.InventoryClickEvent> handler) {
+        return bind(key, itemBuilder.build(), handler);
     }
 
     public @NotNull MenuBuilder button(int slot, @NotNull MenuButton button) {
@@ -77,11 +108,40 @@ public final class MenuBuilder {
         return this;
     }
 
-    public @NotNull BaseMenu build() {
-        BaseMenu menu = (type != null) ? new BaseMenu(type, title) : new BaseMenu(size, title);
+    /**
+     * Builds the menu.
+     *
+     * @return The built BaseMenu instance.
+     */
+    public BaseMenu build() {
+        BaseMenu menu;
+        if (type != null) {
+            menu = new BaseMenu(type);
+        } else {
+            menu = new BaseMenu(size);
+        }
+
+        // Apply bindings
+        if (layout != null) {
+            layout.apply(menu);
+        }
+
+        // Apply manual buttons
         buttons.forEach(menu::setButton);
+
+        // Apply handlers
         menu.setOpenHandler(openHandler);
         menu.setCloseHandler(closeHandler);
+
         return menu;
+    }
+
+    /**
+     * Builds and opens the menu for a player.
+     *
+     * @param player The player to open for.
+     */
+    public void open(org.bukkit.entity.Player player) {
+        build().open(player, title);
     }
 }
