@@ -30,7 +30,7 @@ public class BaseMenu {
     private final int size;
     private final InventoryType type;
     private final Map<Integer, MenuButton> buttons = new HashMap<>();
-    private final Set<MenuWindow> activeWindows = Collections.newSetFromMap(new WeakHashMap<>());
+    private final Set<MenuWindow> activeWindows = new java.util.HashSet<>();
     
     private Consumer<InventoryOpenEvent> openHandler;
     private Consumer<InventoryCloseEvent> closeHandler;
@@ -47,12 +47,12 @@ public class BaseMenu {
     }
 
     /**
-     * Creates a new chest-based BaseMenu with a specific size.
+     * Creates a new chest-based BaseMenu with a specific size or row count.
      *
-     * @param size The number of slots (must be a multiple of 9).
+     * @param size The number of slots (if > 6) or rows (if <= 6).
      */
     public BaseMenu(int size) {
-        this.size = size;
+        this.size = size <= 6 ? size * 9 : size;
         this.type = null;
         ALL_MENUS.add(this);
     }

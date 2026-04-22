@@ -30,7 +30,7 @@ public final class InventoryManager implements Listener {
         // Handle clicks in the menu itself
         if (event.getClickedInventory() == topInventory) {
             event.setCancelled(true);
-            int slot = event.getRawSlot();
+            int slot = event.getSlot();
 
             // Special handling for Anvil completion
             if (menu instanceof AnvilMenu anvil && slot == 2) {
@@ -46,7 +46,11 @@ public final class InventoryManager implements Listener {
             }
         } else {
             // Clicks in player inventory while menu is open
-            if (event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY) {
+            // Prevent ANY action that could move items between inventories
+            if (event.isShiftClick() ||
+                event.getAction() == InventoryAction.COLLECT_TO_CURSOR ||
+                event.getAction() == InventoryAction.HOTBAR_SWAP ||
+                event.getAction() == InventoryAction.HOTBAR_MOVE_AND_READD) {
                 event.setCancelled(true);
             }
         }

@@ -23,6 +23,8 @@ public class AnimationTicker extends BukkitRunnable {
                 continue;
             }
             
+            // org.bukkit.Bukkit.getLogger().info("Ticking menu with " + menu.getActiveWindows().size() + " viewers");
+            
             menu.getRawButtons().forEach((slot, button) -> {
                 if (button instanceof AnimatedButton animated) {
                     animated.update(tick);
