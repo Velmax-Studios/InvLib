@@ -34,6 +34,7 @@ public final class MenuWindow implements InventoryHolder {
         }
         
         refresh();
+        content.registerWindow(this);
         viewer.openInventory(inventory);
     }
 

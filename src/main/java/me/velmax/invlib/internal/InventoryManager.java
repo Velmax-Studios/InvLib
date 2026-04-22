@@ -3,6 +3,7 @@ package me.velmax.invlib.internal;
 import me.velmax.invlib.BaseMenu;
 import me.velmax.invlib.MenuButton;
 import me.velmax.invlib.MenuWindow;
+import me.velmax.invlib.special.AnvilMenu;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -30,6 +31,15 @@ public final class InventoryManager implements Listener {
         if (event.getClickedInventory() == topInventory) {
             event.setCancelled(true);
             int slot = event.getRawSlot();
+
+            // Special handling for Anvil completion
+            if (menu instanceof AnvilMenu anvil && slot == 2) {
+                if (anvil.getCompleteHandler() != null) {
+                    anvil.getCompleteHandler().accept(anvil.getRenameText(), event);
+                }
+                return;
+            }
+
             MenuButton button = menu.getButton(slot);
             if (button != null && button.clickHandler() != null) {
                 button.clickHandler().accept(event);
@@ -50,6 +60,15 @@ public final class InventoryManager implements Listener {
         }
     }
 
+    @EventHandler(priority = EventPriority.LOW)
+    public void onPrepareAnvil(PrepareAnvilEvent event) {
+        InventoryHolder holder = event.getInventory().getHolder();
+        if (holder instanceof MenuWindow window && window.getContent() instanceof AnvilMenu anvil) {
+            String text = event.getInventory().getRenameText();
+            anvil.handleRename(text != null ? text : "");
+        }
+    }
+
     @EventHandler(priority = EventPriority.MONITOR)
     public void onInventoryOpen(InventoryOpenEvent event) {
         InventoryHolder holder = event.getInventory().getHolder();
@@ -66,6 +85,7 @@ public final class InventoryManager implements Listener {
         InventoryHolder holder = event.getInventory().getHolder();
         if (holder instanceof MenuWindow window) {
             BaseMenu menu = window.getContent();
+            menu.unregisterWindow(window);
             if (menu.getCloseHandler() != null) {
                 menu.getCloseHandler().accept(event);
             }
