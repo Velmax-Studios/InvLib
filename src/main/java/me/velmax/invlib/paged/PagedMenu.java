@@ -2,6 +2,7 @@ package me.velmax.invlib.paged;
 
 import me.velmax.invlib.BaseMenu;
 import me.velmax.invlib.MenuButton;
+import me.velmax.invlib.MenuWindow;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -18,8 +19,8 @@ public class PagedMenu extends BaseMenu {
     private final List<Integer> contentSlots;
     private int currentPage = 0;
 
-    public PagedMenu(int size, @NotNull Component title, @NotNull List<Integer> contentSlots) {
-        super(size, title);
+    public PagedMenu(int size, @NotNull List<Integer> contentSlots) {
+        super(size);
         this.contentSlots = contentSlots;
     }
 
@@ -56,22 +57,23 @@ public class PagedMenu extends BaseMenu {
     }
 
     public int getMaxPages() {
+        if (contentSlots.isEmpty()) return 0;
         return (int) Math.ceil((double) contentButtons.size() / contentSlots.size());
     }
 
-    public void nextPage(@NotNull Player player) {
+    public void nextPage(@NotNull Player player, @NotNull Component title) {
         if (currentPage < getMaxPages() - 1) {
             currentPage++;
             update();
-            open(player);
+            open(player, title);
         }
     }
 
-    public void previousPage(@NotNull Player player) {
+    public void previousPage(@NotNull Player player, @NotNull Component title) {
         if (currentPage > 0) {
             currentPage--;
             update();
-            open(player);
+            open(player, title);
         }
     }
 }
