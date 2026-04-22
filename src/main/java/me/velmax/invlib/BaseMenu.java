@@ -1,6 +1,7 @@
 package me.velmax.invlib;
 
 import net.kyori.adventure.text.Component;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -94,6 +95,27 @@ public class BaseMenu {
         } else {
             buttons.put(slot, button);
         }
+    }
+
+    /**
+     * Sets a simple button with an item and no click handler.
+     *
+     * @param slot The slot index.
+     * @param item The item stack.
+     */
+    public void setButton(int slot, @NotNull ItemStack item) {
+        setButton(slot, MenuButton.of(item));
+    }
+
+    /**
+     * Sets a button with an item and a click handler.
+     *
+     * @param slot    The slot index.
+     * @param item    The item stack.
+     * @param handler The click handler.
+     */
+    public void setButton(int slot, @NotNull ItemStack item, @Nullable Consumer<InventoryClickEvent> handler) {
+        setButton(slot, MenuButton.of(item, handler));
     }
 
     /**

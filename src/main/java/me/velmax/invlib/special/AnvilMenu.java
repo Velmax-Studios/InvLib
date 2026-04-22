@@ -13,6 +13,10 @@ import java.util.function.Consumer;
  * A specialized menu for Anvil-based input.
  */
 public class AnvilMenu extends BaseMenu {
+    
+    public static final int SLOT_INPUT_LEFT = 0;
+    public static final int SLOT_INPUT_RIGHT = 1;
+    public static final int SLOT_RESULT = 2;
 
     private Consumer<String> renameHandler;
     private BiConsumer<String, InventoryClickEvent> completeHandler;

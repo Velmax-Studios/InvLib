@@ -41,7 +41,7 @@ public class PagedMenu extends BaseMenu {
     public void update() {
         // Clear only content slots
         for (int slot : contentSlots) {
-            setButton(slot, null);
+            setButton(slot, (MenuButton) null);
         }
 
         int startIdx = currentPage * contentSlots.size();

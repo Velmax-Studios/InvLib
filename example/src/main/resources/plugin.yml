@@ -1,0 +1,7 @@
+name: InvLibExample
+version: 1.0.0
+main: me.velmax.invlib.example.InvLibExample
+api-version: 1.21
+commands:
+  invlib:
+    description: Open the InvLib showcase menu

@@ -60,4 +60,14 @@ public final class MenuPresets {
             event -> action.accept((Player) event.getWhoClicked())
         );
     }
+
+    /**
+     * A decorative filler button that does nothing when clicked.
+     *
+     * @param material The filler material.
+     * @return The filler button.
+     */
+    public static @NotNull MenuButton filler(@NotNull Material material) {
+        return MenuButton.of(ItemBuilder.start(material).name(Component.empty()).build());
+    }
 }
