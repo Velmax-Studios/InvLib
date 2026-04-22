@@ -253,7 +253,133 @@ public final class InvLibExample extends JavaPlugin implements CommandExecutor, 
         // Add a back button at slot 0 (outside the 3x3 grid)
         crafting.setButton(0, ItemBuilder.start(Material.BARRIER).name(mm.deserialize("<red>Back")).build(), e -> openMainMenu(player));
         
-        crafting.open(player, mm.deserialize("Virtual Crafting Table"));
+        crafting.open(player, mm.deserialize("<gradient:gold:yellow>Virtual Crafting Table"));
+    }
+
+    /**
+     * CONFIRMATION DEMO: Simple Yes/No
+     */
+    private void openConfirmationDemo(Player player) {
+        MenuBuilder.chest(3)
+                .title(mm.deserialize("<red>Are you sure?"))
+                .layout(
+                        ".........",
+                        "..Y...N..",
+                        "........."
+                )
+                .bind('Y', ItemBuilder.start(Material.LIME_WOOL)
+                        .name(mm.deserialize("<green><bold>CONFIRM"))
+                        .lore(mm.deserialize("<gray>Click to proceed."))
+                        .build(), e -> {
+                            player.sendMessage(mm.deserialize("<green>Action confirmed!"));
+                            player.closeInventory();
+                        })
+                .bind('N', ItemBuilder.start(Material.RED_WOOL)
+                        .name(mm.deserialize("<red><bold>CANCEL"))
+                        .lore(mm.deserialize("<gray>Click to go back."))
+                        .build(), e -> openMainMenu(player))
+                .open(player);
+    }
+
+    /**
+     * SETTINGS DEMO: Toggles
+     */
+    private void openSettingsDemo(Player player) {
+        MenuBuilder.chest(3)
+                .title(mm.deserialize("<blue>Personal Settings"))
+                .layout(
+                        "FSFSFSFSF",
+                        "S.A.B.C.S",
+                        "FSFSFSFSF"
+                )
+                .bind('F', MenuPresets.filler(Material.CYAN_STAINED_GLASS_PANE))
+                .bind('S', MenuPresets.filler(Material.BLUE_STAINED_GLASS_PANE))
+                .bind('A', ItemBuilder.start(Material.NOTE_BLOCK)
+                        .name(mm.deserialize("<yellow>Sound Effects: <green>ON"))
+                        .build(), e -> player.sendActionBar(mm.deserialize("<yellow>Sounds toggled!")))
+                .bind('B', ItemBuilder.start(Material.BLAZE_POWDER)
+                        .name(mm.deserialize("<light_purple>Particles: <green>ON"))
+                        .build(), e -> player.sendActionBar(mm.deserialize("<light_purple>Particles toggled!")))
+                .bind('C', ItemBuilder.start(Material.FEATHER)
+                        .name(mm.deserialize("<aqua>Flight: <red>OFF"))
+                        .build(), e -> player.sendActionBar(mm.deserialize("<aqua>Flight toggled!")))
+                .open(player);
+    }
+
+    /**
+     * PLAYER LIST: Paged head menu
+     */
+    private void openPlayerListDemo(Player player) {
+        List<Integer> contentSlots = new ArrayList<>();
+        for (int i = 0; i < 45; i++) contentSlots.add(i);
+
+        PagedMenu paged = new PagedMenu(6, contentSlots);
+
+        for (Player online : Bukkit.getOnlinePlayers()) {
+            paged.addContent(MenuButton.of(
+                ItemBuilder.start(Material.PLAYER_HEAD)
+                    .name(mm.deserialize("<yellow>" + online.getName()))
+                    .lore(mm.deserialize("<gray>Click to teleport!"))
+                    .editMeta(meta -> ((SkullMeta) meta).setOwningPlayer(online))
+                    .build(),
+                e -> {
+                    player.teleport(online.getLocation());
+                    player.sendMessage(mm.deserialize("<green>Teleported to " + online.getName()));
+                }
+            ));
+        }
+
+        paged.setButton(45, paged.createPreviousPageButton());
+        paged.setButton(49, ItemBuilder.start(Material.BARRIER).name(mm.deserialize("<red>Back")).build(), e -> openMainMenu(player));
+        paged.setButton(53, paged.createNextPageButton());
+
+        paged.open(player, mm.deserialize("<gradient:aqua:blue>Online Players <gray>(Page " + (paged.getCurrentPage() + 1) + ")"));
+    }
+
+    /**
+     * SHOP DEMO: Categories
+     */
+    private void openShopDemo(Player player) {
+        MenuBuilder.chest(3)
+                .title(mm.deserialize("<gold>Select Category"))
+                .layout(
+                        "FFFFFFFFF",
+                        "F.B.W.A.F",
+                        "FFFFXFFFF"
+                )
+                .bind('F', MenuPresets.filler(Material.ORANGE_STAINED_GLASS_PANE))
+                .bind('B', ItemBuilder.start(Material.GRASS_BLOCK).name(mm.deserialize("<green>Blocks")).build(), e -> player.sendMessage("Opening Blocks..."))
+                .bind('W', ItemBuilder.start(Material.DIAMOND_SWORD).name(mm.deserialize("<red>Weapons")).build(), e -> player.sendMessage("Opening Weapons..."))
+                .bind('A', ItemBuilder.start(Material.IRON_CHESTPLATE).name(mm.deserialize("<blue>Armor")).build(), e -> player.sendMessage("Opening Armor..."))
+                .bind('X', ItemBuilder.start(Material.ARROW).name(mm.deserialize("<yellow>Back")).build(), e -> openMainMenu(player))
+                .open(player);
+    }
+
+    /**
+     * PROFILE DEMO: Stats Dashboard
+     */
+    private void openProfileDemo(Player player) {
+        // This is triggered from a subcommand or can be added to main menu
+        MenuBuilder.chest(5)
+                .title(mm.deserialize("<light_purple>" + player.getName() + "'s Profile"))
+                .layout(
+                        "FFFFFFFFF",
+                        "F.......F",
+                        "F...H...F",
+                        "F.S.L.K.F",
+                        "FFFFFFFFF"
+                )
+                .bind('F', MenuPresets.filler(Material.PURPLE_STAINED_GLASS_PANE))
+                .bind('H', ItemBuilder.start(Material.PLAYER_HEAD)
+                        .name(mm.deserialize("<yellow><bold>" + player.getName()))
+                        .editMeta(meta -> ((SkullMeta) meta).setOwningPlayer(player)))
+                .bind('S', ItemBuilder.start(Material.EXPERIENCE_BOTTLE)
+                        .name(mm.deserialize("<green>Level: <white>" + player.getLevel())))
+                .bind('L', ItemBuilder.start(Material.HEART_OF_THE_SEA)
+                        .name(mm.deserialize("<red>Health: <white>" + (int) player.getHealth())))
+                .bind('K', ItemBuilder.start(Material.GOLDEN_SWORD)
+                        .name(mm.deserialize("<gold>Kills: <white>1,234")))
+                .open(player);
     }
 
     private String formatName(String name) {
