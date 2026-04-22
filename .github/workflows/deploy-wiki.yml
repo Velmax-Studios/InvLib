@@ -3,8 +3,6 @@ name: Deploy Wiki to GitHub Pages
 on:
   push:
     branches: [ "main" ]
-    paths:
-      - 'wiki/**'
   workflow_dispatch:
 
 permissions:
