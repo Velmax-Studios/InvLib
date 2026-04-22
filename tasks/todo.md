@@ -19,13 +19,14 @@ InvLib is a modern, lightweight inventory management library for Paper 1.21.2+.
 - [x] **Animation Framework**: Dynamic, frame-based item animations with an optimized global ticker.
 - [x] **Button Presets**: Built-in `Close`, `Back`, and `Navigation` buttons.
 - [x] **Item Builder**: Fluent API for creating and modifying ItemStacks.
-
-## 🚀 Future Roadmap
+- [x] **Stability Fixes**: Resolved MenuBuilder inconsistencies and updated Anvil API usage.
 
 ### Documentation
-- [ ] **README.md**: Comprehensive guide with code examples.
-- [ ] **Javadocs**: Document all public API methods and classes.
-- [ ] **Wiki**: Detailed tutorials on Layouts and Animations.
+- [x] **README.md**: Comprehensive guide with code examples.
+- [x] **Javadocs**: Document all public API methods and classes.
+- [x] **Wiki**: Premium HTML + Tailwind CSS documentation in `wiki/` folder.
+
+## 🚀 Future Roadmap
 
 ### Advanced Features
 - [ ] **Title Animations**: Support for animated inventory titles.
