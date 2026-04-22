@@ -26,6 +26,10 @@ InvLib is a modern, lightweight inventory management library for Paper 1.21.2+.
 - [x] **Javadocs**: Document all public API methods and classes.
 - [x] **Wiki**: Premium HTML + Tailwind CSS documentation in `wiki/` folder.
 
+### CI/CD & Distribution
+- [x] **JitPack Support**: Configured maven-publishing for easy distribution.
+- [x] **GitHub Actions**: Automated CI builds and Wiki deployment.
+
 ## 🚀 Future Roadmap
 
 ### Advanced Features
