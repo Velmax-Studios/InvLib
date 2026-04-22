@@ -3,70 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>InvLib Wiki | Specialized Menus</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Inter', sans-serif; }
-        code { font-family: 'JetBrains Mono', monospace; }
-        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .gradient-text { background: linear-gradient(135deg, #22d3ee, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    </style>
+    <title>Specialized Menus | InvLib Wiki</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-slate-900 text-slate-200 min-h-screen">
-    <nav class="border-b border-slate-800 p-6 glass sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto flex justify-between items-center">
-            <h1 class="text-2xl font-bold gradient-text">InvLib Wiki</h1>
-            <div class="space-x-6 text-sm font-medium">
-                <a href="index.html" class="hover:text-cyan-400 transition">Home</a>
-                <a href="layouts.html" class="hover:text-cyan-400 transition">Layouts</a>
-                <a href="animations.html" class="hover:text-cyan-400 transition">Animations</a>
-                <a href="special.html" class="text-cyan-400">Specialized</a>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">Inv<span>Lib</span></a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="layouts.html">Layouts</a>
+                <a href="animations.html">Animations</a>
+                <a href="special.html" class="active">Specialized</a>
+                <a href="https://github.com/Velmax-Studios/InvLib" target="_blank">GitHub</a>
             </div>
         </div>
     </nav>
 
-    <main class="max-w-4xl mx-auto p-12">
-        <header class="mb-12">
-            <h2 class="text-4xl font-extrabold mb-4"><span class="gradient-text">Specialized</span> Menus</h2>
-            <p class="text-slate-400">Customized wrappers for non-chest inventory types.</p>
+    <main class="prose">
+        <header style="margin-bottom: 4rem;">
+            <h1>Specialized Menus</h1>
+            <p style="font-size: 1.25rem; color: var(--muted);">Customized wrappers for non-chest inventory types and complex logic.</p>
         </header>
 
-        <section class="space-y-12">
-            <div class="glass p-8 rounded-3xl border-indigo-500/30">
-                <h3 class="text-2xl font-bold mb-4 text-indigo-400">AnvilMenu (Input)</h3>
-                <p class="text-slate-400 mb-6 text-sm">Capture text input from players using the virtual anvil renaming slot. Includes built-in handlers for real-time rename tracking and final completion.</p>
-                <div class="bg-slate-950 p-6 rounded-xl border border-slate-800 overflow-x-auto">
-                    <pre class="text-sm text-indigo-300"><code>AnvilMenu anvil = new AnvilMenu();
-anvil.onRename(text -> { /* Real-time text */ });
-anvil.onComplete((text, event) -> { /* Final submit */ });</code></pre>
-                </div>
+        <div class="grid">
+            <div class="card">
+                <h3 style="color: var(--accent);">AnvilMenu</h3>
+                <p>Capture text input from players using the virtual anvil renaming slot. Includes built-in handlers for real-time rename tracking.</p>
+                <pre style="margin-top: 1rem;"><code>AnvilMenu anvil = new AnvilMenu();
+anvil.onRename(text -> { ... });
+anvil.onComplete((text, event) -> { ... });</code></pre>
             </div>
 
-            <div class="glass p-8 rounded-3xl border-emerald-500/30">
-                <h3 class="text-2xl font-bold mb-4 text-emerald-400">PagedMenu</h3>
-                <p class="text-slate-400 mb-6 text-sm">Perfect for large databases or player lists. Automatically handles slot filling across multiple pages. Supports shared multi-viewer page synchronization.</p>
-                <div class="bg-slate-950 p-6 rounded-xl border border-slate-800 overflow-x-auto">
-                    <pre class="text-sm text-emerald-300"><code>PagedMenu paged = new PagedMenu(rows, contentSlots);
+            <div class="card">
+                <h3 style="color: #10b981;">PagedMenu</h3>
+                <p>Perfect for large databases or player lists. Automatically handles slot filling across multiple pages with shared synchronization.</p>
+                <pre style="margin-top: 1rem;"><code>PagedMenu paged = new PagedMenu(6, contentSlots);
 paged.addContent(button);
-paged.createNextPageButton(); // Built-in helper</code></pre>
-                </div>
+paged.createNextPageButton();</code></pre>
             </div>
 
-            <div class="glass p-8 rounded-3xl border-orange-500/30">
-                <h3 class="text-2xl font-bold mb-4 text-orange-400">CraftingMenu</h3>
-                <p class="text-slate-400 mb-6 text-sm">Provides a simplified 3x3 grid API for virtual crafting tables. Easily map coordinates (row, col) to crafting slots.</p>
-                <div class="bg-slate-950 p-6 rounded-xl border border-slate-800 overflow-x-auto">
-                    <pre class="text-sm text-orange-300"><code>CraftingMenu menu = new CraftingMenu();
-menu.setGridButton(1, 1, button); // Middle slot
-menu.setResultButton(result);</code></pre>
-                </div>
+            <div class="card">
+                <h3 style="color: #f59e0b;">MerchantMenu</h3>
+                <p>Create virtual villager trades without spawning an actual NPC. Perfect for custom shops and trading systems.</p>
+                <pre style="margin-top: 1rem;"><code>MerchantMenu menu = new MerchantMenu("Shop");
+menu.addTrade(cost, result);
+menu.open(player);</code></pre>
             </div>
+
+            <div class="card">
+                <h3 style="color: #ef4444;">CraftingMenu</h3>
+                <p>Provides a simplified 3x3 grid API for virtual crafting tables. Easily map coordinates (row, col) to crafting slots.</p>
+                <pre style="margin-top: 1rem;"><code>CraftingMenu menu = new CraftingMenu();
+menu.setGridButton(1, 1, button);
+menu.setResultButton(result);</code></pre>
+            </div>
+        </div>
+
+        <section style="margin-top: 4rem;">
+            <h2>Multi-Viewer Support</h2>
+            <p>Every menu in InvLib supports multiple viewers out of the box. Updates to one slot are reflected instantly for everyone watching, making shared interfaces (like team-chests or communal crafting) easier than ever to implement.</p>
         </section>
     </main>
 
-    <footer class="mt-24 border-t border-slate-800 p-12 text-center text-slate-500 text-sm">
-        <p>&copy; 2026 Velmax Studios. All rights reserved.</p>
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <div class="logo" style="margin-bottom: 1rem;">Inv<span>Lib</span></div>
+                <p style="font-size: 0.875rem; color: var(--muted);">Redefining inventory management.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Navigation</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="layouts.html">Layouts</a></li>
+                    <li><a href="animations.html">Animations</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2026 Velmax Studios. All rights reserved.
+        </div>
     </footer>
 </body>
 </html>

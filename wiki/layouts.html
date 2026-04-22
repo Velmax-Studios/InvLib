@@ -3,57 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>InvLib Wiki | Layouts</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Inter', sans-serif; }
-        code { font-family: 'JetBrains Mono', monospace; }
-        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .gradient-text { background: linear-gradient(135deg, #22d3ee, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    </style>
+    <title>Layouts | InvLib Wiki</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-slate-900 text-slate-200 min-h-screen">
-    <nav class="border-b border-slate-800 p-6 glass sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto flex justify-between items-center">
-            <h1 class="text-2xl font-bold gradient-text">InvLib Wiki</h1>
-            <div class="space-x-6 text-sm font-medium">
-                <a href="index.html" class="hover:text-cyan-400 transition">Home</a>
-                <a href="layouts.html" class="text-cyan-400">Layouts</a>
-                <a href="animations.html" class="hover:text-cyan-400 transition">Animations</a>
-                <a href="special.html" class="hover:text-cyan-400 transition">Specialized</a>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">Inv<span>Lib</span></a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="layouts.html" class="active">Layouts</a>
+                <a href="animations.html">Animations</a>
+                <a href="special.html">Specialized</a>
+                <a href="https://github.com/Velmax-Studios/InvLib" target="_blank">GitHub</a>
             </div>
         </div>
     </nav>
 
-    <main class="max-w-4xl mx-auto p-12">
-        <header class="mb-12">
-            <h2 class="text-4xl font-extrabold mb-4">The <span class="gradient-text">Layout</span> System</h2>
-            <p class="text-slate-400">Visual design meets clean code. Design your menus like a pro.</p>
+    <main class="prose">
+        <header style="margin-bottom: 4rem;">
+            <h1>The Layout System</h1>
+            <p style="font-size: 1.25rem; color: var(--muted);">Visual design meets clean code. Design your menus like a pro.</p>
         </header>
 
-        <section class="space-y-12">
-            <div>
-                <h3 class="text-2xl font-bold mb-4 text-cyan-400">Concept</h3>
-                <p class="text-slate-400 leading-relaxed">Layouts allow you to define the structure of your inventory using a grid of characters. Instead of manually calculating slot indices (0, 1, 2...), you can simply "draw" your menu.</p>
+        <section>
+            <h2>Concept</h2>
+            <p>Layouts allow you to define the structure of your inventory using a grid of characters. Instead of manually calculating slot indices (0, 1, 2...), you can simply "draw" your menu in your code.</p>
+            
+            <div class="pattern-box">
+                #########<br>
+                #.......#<br>
+                ####C####
             </div>
+            <p style="text-align: center; font-size: 0.875rem; color: var(--muted); margin-top: -1rem;">A typical layout defining a border (#), content area (.), and close button (C).</p>
+        </section>
 
-            <div class="glass p-8 rounded-2xl">
-                <h4 class="text-lg font-bold mb-4">Example Pattern</h4>
-                <div class="bg-slate-950 p-6 rounded-xl border border-slate-800 text-cyan-400 text-lg mb-6 tracking-widest font-mono">
-                    #########<br>
-                    #.......#<br>
-                    ####C####
-                </div>
-                <p class="text-sm text-slate-500 italic">This pattern defines a border (#), a content area (.), and a special close button (C).</p>
-            </div>
-
-            <div>
-                <h3 class="text-2xl font-bold mb-4 text-cyan-400">Implementation</h3>
-                <p class="text-slate-400 mb-6">Using the <code>MenuBuilder</code>, you can bind specific <code>MenuButton</code>s to the characters in your layout.</p>
-                
-                <div class="bg-slate-950 p-6 rounded-xl border border-slate-800 overflow-x-auto">
-                    <pre class="text-sm text-slate-300"><code>MenuBuilder.chest(3)
+        <section>
+            <h2>Implementation</h2>
+            <p>Using the <code>MenuBuilder</code>, you can bind specific <code>MenuButton</code>s to the characters in your layout. The library will automatically calculate the slot indices for you.</p>
+            
+            <pre><code>MenuBuilder.chest(3)
     .layout(
         "#########",
         "#.......#",
@@ -62,18 +52,32 @@
     .bind('#', MenuPresets.filler(Material.BLACK_STAINED_GLASS_PANE))
     .bind('C', MenuPresets.close())
     .open(player, Component.text("Example"));</code></pre>
-                </div>
-            </div>
-
-            <div class="bg-blue-500/10 border-l-4 border-blue-500 p-6 rounded-r-xl">
-                <h4 class="text-blue-400 font-bold mb-2">Pro Tip</h4>
-                <p class="text-slate-400 text-sm italic">"Characters are case-sensitive. You can use 'A' and 'a' for different groups of items in the same menu!"</p>
-            </div>
         </section>
+
+        <div class="callout">
+            <h4>Pro Tip</h4>
+            <p>Characters are case-sensitive. You can use 'A' and 'a' for different groups of items in the same menu! This is extremely useful for complex interfaces with multiple dynamic sections.</p>
+        </div>
     </main>
 
-    <footer class="mt-24 border-t border-slate-800 p-12 text-center text-slate-500 text-sm">
-        <p>&copy; 2026 Velmax Studios. All rights reserved.</p>
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <div class="logo" style="margin-bottom: 1rem;">Inv<span>Lib</span></div>
+                <p style="font-size: 0.875rem; color: var(--muted);">Redefining inventory management.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Navigation</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="animations.html">Animations</a></li>
+                    <li><a href="special.html">Specialized</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2026 Velmax Studios. All rights reserved.
+        </div>
     </footer>
 </body>
 </html>
