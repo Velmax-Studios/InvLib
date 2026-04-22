@@ -13,4 +13,6 @@
 *   **Lesson**: Always include the Gradle wrapper (`gradlew`) in the repository to ensure CI environments (GitHub Actions) can execute builds without requiring pre-installed global Gradle versions.
 *   **Context**: Initial GitHub Action failed because `gradlew` was missing from the repository.
 
-*   **Lesson**: When deploying to GitHub Pages via Actions, use `enablement: true` in `actions/configure-pages` to help bypass manual configuration hurdles, though manual setting to "GitHub Actions" as source is still the most reliable method.
+## 📦 Shading & Distribution
+*   **Lesson**: When creating a standalone plugin that depends on a library (like InvLib), you must **shade** (bundle) the library into the plugin JAR using a tool like the Gradle Shadow plugin.
+*   **Context**: The example plugin failed with `NoClassDefFoundError` because the `InvLib` classes weren't included in the final JAR.

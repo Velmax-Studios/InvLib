@@ -22,6 +22,7 @@ InvLib is a modern, lightweight inventory management library for Paper 1.21.2+.
 - [x] **Example Plugin**: Comprehensive showcase in `example/` folder.
 - [x] **API Polish**: Added `filler` preset and `setButton` convenience methods.
 - [x] **Stability Fixes**: Resolved MenuBuilder inconsistencies and updated Anvil API usage.
+- [x] **Shading & Relocation**: Bundled library into example plugin with package relocation for production-ready distribution.
 
 ### Documentation
 - [x] **README.md**: Comprehensive guide with code examples.
