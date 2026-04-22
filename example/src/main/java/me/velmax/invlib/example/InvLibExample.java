@@ -37,6 +37,10 @@ public final class InvLibExample extends JavaPlugin implements CommandExecutor, 
     @Override
     public void onEnable() {
         saveDefaultConfig();
+        
+        // IMPORTANT: Initialize the library
+        me.velmax.invlib.InvLib.init(this);
+        
         getCommand("invlib").setExecutor(this);
         getCommand("invlib").setTabCompleter(this);
         
