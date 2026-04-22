@@ -2,16 +2,16 @@ package me.velmax.invlib.internal;
 
 import me.velmax.invlib.BaseMenu;
 import me.velmax.invlib.MenuButton;
+import me.velmax.invlib.MenuWindow;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
-import org.jetbrains.annotations.NotNull;
 
 /**
- * Global listener that routes inventory events to their respective BaseMenu instances.
+ * Global listener that routes inventory events to their respective MenuWindow and BaseMenu instances.
  */
 public final class InventoryManager implements Listener {
 
@@ -20,9 +20,11 @@ public final class InventoryManager implements Listener {
         Inventory topInventory = event.getView().getTopInventory();
         InventoryHolder holder = topInventory.getHolder();
 
-        if (!(holder instanceof BaseMenu menu)) {
+        if (!(holder instanceof MenuWindow window)) {
             return;
         }
+
+        BaseMenu menu = window.getContent();
 
         // Handle clicks in the menu itself
         if (event.getClickedInventory() == topInventory) {
@@ -34,9 +36,6 @@ public final class InventoryManager implements Listener {
             }
         } else {
             // Clicks in player inventory while menu is open
-            // By default, we might want to cancel these to avoid stealing items from the GUI
-            // but some GUIs might allow it. For simplicity, we'll allow it but handle cancellations.
-            // If it's a shift-click into the menu, we should probably cancel it.
             if (event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY) {
                 event.setCancelled(true);
             }
@@ -46,7 +45,7 @@ public final class InventoryManager implements Listener {
     @EventHandler(priority = EventPriority.LOW, ignoreCancelled = true)
     public void onInventoryDrag(InventoryDragEvent event) {
         InventoryHolder holder = event.getInventory().getHolder();
-        if (holder instanceof BaseMenu) {
+        if (holder instanceof MenuWindow) {
             event.setCancelled(true);
         }
     }
@@ -54,7 +53,8 @@ public final class InventoryManager implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onInventoryOpen(InventoryOpenEvent event) {
         InventoryHolder holder = event.getInventory().getHolder();
-        if (holder instanceof BaseMenu menu) {
+        if (holder instanceof MenuWindow window) {
+            BaseMenu menu = window.getContent();
             if (menu.getOpenHandler() != null) {
                 menu.getOpenHandler().accept(event);
             }
@@ -64,7 +64,8 @@ public final class InventoryManager implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onInventoryClose(InventoryCloseEvent event) {
         InventoryHolder holder = event.getInventory().getHolder();
-        if (holder instanceof BaseMenu menu) {
+        if (holder instanceof MenuWindow window) {
+            BaseMenu menu = window.getContent();
             if (menu.getCloseHandler() != null) {
                 menu.getCloseHandler().accept(event);
             }
