@@ -3,6 +3,7 @@ package me.velmax.invlib.paged;
 import me.velmax.invlib.BaseMenu;
 import me.velmax.invlib.MenuButton;
 import me.velmax.invlib.MenuWindow;
+import me.velmax.invlib.builder.ItemBuilder;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -61,19 +62,47 @@ public class PagedMenu extends BaseMenu {
         return (int) Math.ceil((double) contentButtons.size() / contentSlots.size());
     }
 
-    public void nextPage(@NotNull Player player, @NotNull Component title) {
+    public void nextPage() {
         if (currentPage < getMaxPages() - 1) {
             currentPage++;
             update();
-            open(player, title);
+            updateAll();
         }
     }
 
-    public void previousPage(@NotNull Player player, @NotNull Component title) {
+    public void previousPage() {
         if (currentPage > 0) {
             currentPage--;
             update();
-            open(player, title);
+            updateAll();
         }
+    }
+
+    /**
+     * Creates a standard next page button.
+     *
+     * @return The next page button.
+     */
+    public @NotNull MenuButton createNextPageButton() {
+        return MenuButton.of(
+            ItemBuilder.start(org.bukkit.Material.ARROW)
+                .name(Component.text("Next Page", net.kyori.adventure.text.format.NamedTextColor.GREEN))
+                .build(),
+            event -> nextPage()
+        );
+    }
+
+    /**
+     * Creates a standard previous page button.
+     *
+     * @return The previous page button.
+     */
+    public @NotNull MenuButton createPreviousPageButton() {
+        return MenuButton.of(
+            ItemBuilder.start(org.bukkit.Material.ARROW)
+                .name(Component.text("Previous Page", net.kyori.adventure.text.format.NamedTextColor.GREEN))
+                .build(),
+            event -> previousPage()
+        );
     }
 }
