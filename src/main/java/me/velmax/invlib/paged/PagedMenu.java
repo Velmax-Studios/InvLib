@@ -20,6 +20,12 @@ public class PagedMenu extends BaseMenu {
     private final List<Integer> contentSlots;
     private int currentPage = 0;
 
+    /**
+     * Creates a new PagedMenu.
+     *
+     * @param size         The size of the inventory (rows or total slots).
+     * @param contentSlots The slots where paged content should be displayed.
+     */
     public PagedMenu(int size, @NotNull List<Integer> contentSlots) {
         super(size);
         this.contentSlots = contentSlots;
@@ -53,15 +59,28 @@ public class PagedMenu extends BaseMenu {
         }
     }
 
+    /**
+     * Gets the current page index.
+     *
+     * @return The current page (0-indexed).
+     */
     public int getCurrentPage() {
         return currentPage;
     }
 
+    /**
+     * Gets the total number of pages.
+     *
+     * @return The max pages.
+     */
     public int getMaxPages() {
         if (contentSlots.isEmpty()) return 0;
         return (int) Math.ceil((double) contentButtons.size() / contentSlots.size());
     }
 
+    /**
+     * Switches to the next page if possible.
+     */
     public void nextPage() {
         if (currentPage < getMaxPages() - 1) {
             currentPage++;
@@ -70,6 +89,9 @@ public class PagedMenu extends BaseMenu {
         }
     }
 
+    /**
+     * Switches to the previous page if possible.
+     */
     public void previousPage() {
         if (currentPage > 0) {
             currentPage--;

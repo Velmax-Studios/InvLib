@@ -49,7 +49,7 @@ public class BaseMenu {
     /**
      * Creates a new chest-based BaseMenu with a specific size or row count.
      *
-     * @param size The number of slots (if > 6) or rows (if <= 6).
+     * @param size The number of slots (if &gt; 6) or rows (if &lt;= 6).
      */
     public BaseMenu(int size) {
         this.size = size <= 6 ? size * 9 : size;
@@ -146,14 +146,29 @@ public class BaseMenu {
         buttons.clear();
     }
 
+    /**
+     * Gets the total size of the menu in slots.
+     *
+     * @return The size.
+     */
     public int getSize() {
         return size;
     }
 
+    /**
+     * Gets the inventory type of the menu.
+     *
+     * @return The inventory type.
+     */
     public @Nullable InventoryType getType() {
         return type;
     }
 
+    /**
+     * Gets the open handler for the menu.
+     *
+     * @return The open handler.
+     */
     public @Nullable Consumer<InventoryOpenEvent> getOpenHandler() {
         return openHandler;
     }
@@ -162,6 +177,11 @@ public class BaseMenu {
         this.openHandler = openHandler;
     }
 
+    /**
+     * Gets the close handler for the menu.
+     *
+     * @return The close handler.
+     */
     public @Nullable Consumer<InventoryCloseEvent> getCloseHandler() {
         return closeHandler;
     }
