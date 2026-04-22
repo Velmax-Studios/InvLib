@@ -8,3 +8,7 @@
 ## 📦 Paper API Compatibility
 *   **Lesson**: Prefer `InventoryView` methods over `Inventory` methods for specialized inventory data (like Anvil rename text) to avoid deprecation warnings.
 *   **Context**: `AnvilInventory.getRenameText()` is deprecated in Paper 1.21.2+; use `event.getView().getRenameText()` instead.
+
+## 🚀 CI/CD Automation
+*   **Lesson**: Always include the Gradle wrapper (`gradlew`) in the repository to ensure CI environments (GitHub Actions) can execute builds without requiring pre-installed global Gradle versions.
+*   **Context**: Initial GitHub Action failed because `gradlew` was missing from the repository.
