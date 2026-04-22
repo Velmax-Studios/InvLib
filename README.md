@@ -78,8 +78,13 @@ AnimatedButton animated = new AnimatedButton(rainbow);
 menu.setButton(0, animated);
 ```
 
+## 📸 Example
+
+![Example GIF](https://i.postimg.cc/L5KBKkpY/2026-04-22-10-35-53-(online-video-cutter-com).gif)
+
 [![JitPack](https://jitpack.io/v/Velmax-Studios/InvLib.svg)](https://jitpack.io/#Velmax-Studios/InvLib)
 [![Wiki](https://img.shields.io/badge/Wiki-Documentation-cyan)](https://Velmax-Studios.github.io/InvLib/)
+
 
 ## 📦 Installation
 
