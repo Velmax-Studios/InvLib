@@ -23,6 +23,8 @@ dependencies {
 
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+    withSourcesJar()
+    withJavadocJar()
 }
 
 tasks.withType<JavaCompile> {
@@ -33,4 +35,12 @@ tasks.withType<JavaCompile> {
 tasks.test {
     useJUnitPlatform()
     failOnNoDiscoveredTests = false
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            from(components["java"])
+        }
+    }
 }

@@ -78,15 +78,32 @@ AnimatedButton animated = new AnimatedButton(rainbow);
 menu.setButton(0, animated);
 ```
 
-## 📦 Installation (Gradle)
+[![JitPack](https://jitpack.io/v/Velmax-Studios/InvLib.svg)](https://jitpack.io/#Velmax-Studios/InvLib)
+[![Wiki](https://img.shields.io/badge/Wiki-Documentation-cyan)](https://Velmax-Studios.github.io/InvLib/)
 
-```kotlin
+## 📦 Installation
+
+Add the JitPack repository and the InvLib dependency to your `build.gradle` or `pom.xml`.
+
+### Gradle (Groovy)
+```groovy
 repositories {
-    maven("https://repo.velmax.me/snapshots")
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
-    implementation("me.velmax:invlib:1.0.0-SNAPSHOT")
+    implementation 'com.github.Velmax-Studios:InvLib:Tag'
+}
+```
+
+### Gradle (Kotlin)
+```kotlin
+repositories {
+    maven("https://jitpack.io")
+}
+
+dependencies {
+    implementation("com.github.Velmax-Studios:InvLib:Tag")
 }
 ```
 
