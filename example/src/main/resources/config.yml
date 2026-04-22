@@ -1,0 +1,16 @@
+# InvLib Example Plugin Configuration
+
+# Settings for the performance test (Paged Menu)
+performance-test:
+  items-per-page: 45
+  include-air: false
+
+# Customization for the main menu
+main-menu:
+  title: "<gradient:#55cdfc:#f7a8b8:#ffffff:#f7a8b8:#55cdfc><bold>InvLib Showcase</bold></gradient>"
+  filler-material: "GRAY_STAINED_GLASS_PANE"
+
+# Animation settings
+animations:
+  rainbow-speed: 5
+  pulsing-speed: 10

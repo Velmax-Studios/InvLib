@@ -9,170 +9,225 @@ import me.velmax.invlib.builder.ItemBuilder;
 import me.velmax.invlib.builder.MenuBuilder;
 import me.velmax.invlib.paged.PagedMenu;
 import me.velmax.invlib.special.AnvilMenu;
+import me.velmax.invlib.special.MerchantMenu;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import org.bukkit.Bukkit;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.MerchantRecipe;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
-public final class InvLibExample extends JavaPlugin implements CommandExecutor {
+public final class InvLibExample extends JavaPlugin implements CommandExecutor, TabCompleter {
 
-    private BaseMenu sharedCounterMenu;
-    private final AtomicInteger sharedCounter = new AtomicInteger(0);
+    private final MiniMessage mm = MiniMessage.miniMessage();
 
     @Override
     public void onEnable() {
+        saveDefaultConfig();
         getCommand("invlib").setExecutor(this);
+        getCommand("invlib").setTabCompleter(this);
         
-        // Initialize shared menu
-        setupSharedMenu();
-        
-        getLogger().info("InvLib Example Plugin enabled!");
+        getLogger().info("InvLib Showcase Plugin enabled! Use /invlib to begin.");
     }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (!(sender instanceof Player player)) return true;
-        openMainMenu(player);
+        if (!(sender instanceof Player player)) {
+            sender.sendMessage("Only players can use this command.");
+            return true;
+        }
+
+        if (args.length == 0) {
+            openMainMenu(player);
+            return true;
+        }
+
+        switch (args[0].toLowerCase()) {
+            case "performance" -> openPerformanceDemo(player);
+            case "animate" -> openAnimationDemo(player);
+            case "input" -> openAnvilDemo(player);
+            case "trade" -> openMerchantDemo(player);
+            case "craft" -> openCraftingDemo(player);
+            default -> player.sendMessage(mm.deserialize("<red>Unknown subcommand. Use /invlib for the main menu."));
+        }
+
         return true;
     }
 
+    @Override
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+        if (args.length == 1) {
+            return Arrays.asList("performance", "animate", "input", "trade", "craft").stream()
+                    .filter(s -> s.startsWith(args[0].toLowerCase()))
+                    .collect(Collectors.toList());
+        }
+        return List.of();
+    }
+
+    /**
+     * MAIN MENU: Showcases Layouts and Button Binding
+     */
     private void openMainMenu(Player player) {
+        String titleStr = getConfig().getString("main-menu.title", "InvLib Showcase");
+        Material fillerMat = Material.valueOf(getConfig().getString("main-menu.filler-material", "GRAY_STAINED_GLASS_PANE"));
+
         MenuBuilder.chest(3)
-                .title(Component.text("InvLib Showcase", NamedTextColor.DARK_AQUA, TextDecoration.BOLD))
+                .title(mm.deserialize(titleStr))
                 .layout(
-                        "BBBBBBBBB",
-                        "B L A P S",
-                        "B . N . C",
-                        "BBBBBBBBB"
+                        "FFFFFFFFF",
+                        "F P A I T",
+                        "FFFFXCFFF"
                 )
-                .bind('B', MenuPresets.filler(Material.CYAN_STAINED_GLASS_PANE))
-                .bind('L', new ItemBuilder(Material.MAP)
-                        .name(Component.text("Layout & Builder Demo", NamedTextColor.YELLOW))
-                        .lore(Component.text("Click to see string-based layouts in action", NamedTextColor.GRAY))
-                        .build(), e -> openLayoutDemo(player))
-                .bind('A', new ItemBuilder(Material.GLOWSTONE_DUST)
-                        .name(Component.text("Animations Demo", NamedTextColor.LIGHT_PURPLE))
-                        .lore(Component.text("Smooth, optimized item animations", NamedTextColor.GRAY))
+                .bind('F', MenuPresets.filler(fillerMat))
+                .bind('P', ItemBuilder.start(Material.NETHERITE_UPGRADE_SMITHING_TEMPLATE)
+                        .name(mm.deserialize("<green><bold>Performance Test"))
+                        .lore(mm.deserialize("<gray>Opens a paged menu with all"), mm.deserialize("<gray>Minecraft items (800+)."))
+                        .build(), e -> openPerformanceDemo(player))
+                .bind('A', ItemBuilder.start(Material.MAGMA_CREAM)
+                        .name(mm.deserialize("<light_purple><bold>Animation Gallery"))
+                        .lore(mm.deserialize("<gray>Showcases complex global"), mm.deserialize("<gray>item animations."))
                         .build(), e -> openAnimationDemo(player))
-                .bind('P', new ItemBuilder(Material.PAPER)
-                        .name(Component.text("Paged Menu Demo", NamedTextColor.GREEN))
-                        .lore(Component.text("Browse large lists with ease", NamedTextColor.GRAY))
-                        .build(), e -> openPagedDemo(player))
-                .bind('S', new ItemBuilder(Material.COMPASS)
-                        .name(Component.text("Shared Menu Demo", NamedTextColor.GOLD))
-                        .lore(Component.text("Synchronized menu for multiple viewers", NamedTextColor.GRAY))
-                        .build(), e -> sharedCounterMenu.open(player, Component.text("Shared Clicker")))
-                .bind('N', new ItemBuilder(Material.ANVIL)
-                        .name(Component.text("Anvil Demo", NamedTextColor.WHITE))
-                        .lore(Component.text("Input text via Anvil", NamedTextColor.GRAY))
+                .bind('I', ItemBuilder.start(Material.NAME_TAG)
+                        .name(mm.deserialize("<white><bold>Anvil Input"))
+                        .lore(mm.deserialize("<gray>Test real-time text input"), mm.deserialize("<gray>handling via Anvils."))
                         .build(), e -> openAnvilDemo(player))
-                .bind('C', new ItemBuilder(Material.CRAFTING_TABLE)
-                        .name(Component.text("Crafting Demo", NamedTextColor.GOLD))
-                        .lore(Component.text("Virtual 3x3 crafting grid", NamedTextColor.GRAY))
+                .bind('T', ItemBuilder.start(Material.EMERALD)
+                        .name(mm.deserialize("<gold><bold>Merchant Trades"))
+                        .lore(mm.deserialize("<gray>Virtual villager trading"), mm.deserialize("<gray>without actual entities."))
+                        .build(), e -> openMerchantDemo(player))
+                .bind('C', ItemBuilder.start(Material.CRAFTING_TABLE)
+                        .name(mm.deserialize("<yellow><bold>Virtual Crafting"))
+                        .lore(mm.deserialize("<gray>A standalone 3x3 grid"), mm.deserialize("<gray>for custom crafting."))
                         .build(), e -> openCraftingDemo(player))
-                .open(player);
-    }
-
-    private void openCraftingDemo(Player player) {
-        me.velmax.invlib.special.CraftingMenu crafting = new me.velmax.invlib.special.CraftingMenu();
-        crafting.setButton(0, new ItemBuilder(Material.BARRIER).name(Component.text("Back")).build(), e -> openMainMenu(player));
-        crafting.open(player, Component.text("Virtual Crafting"));
-    }
-
-    private void openAnvilDemo(Player player) {
-        AnvilMenu anvil = new AnvilMenu();
-        anvil.onRename(text -> {
-            player.sendMessage(Component.text("You are typing: " + text, NamedTextColor.GRAY));
-        });
-        anvil.onComplete((text, event) -> {
-            player.sendMessage(Component.text("You finished with: " + text, NamedTextColor.GREEN));
-            player.closeInventory();
-        });
-        anvil.setButton(AnvilMenu.SLOT_INPUT_LEFT, new ItemBuilder(Material.PAPER).name(Component.text("Type here...")).build());
-        anvil.open(player, Component.text("Enter your name"));
-    }
-
-    private void openLayoutDemo(Player player) {
-        MenuBuilder.chest(5)
-                .title(Component.text("Visual Layouts"))
-                .layout(
-                        "GGGGGGGGG",
-                        "G.......G",
-                        "G..#.#..G",
-                        "G.......G",
-                        "GGGGXGGGG"
-                )
-                .bind('G', MenuPresets.filler(Material.GRAY_STAINED_GLASS_PANE))
-                .bind('#', MenuPresets.filler(Material.IRON_BARS))
                 .bind('X', MenuPresets.close())
                 .open(player);
     }
 
-    private void openAnimationDemo(Player player) {
-        // Frame-based animation
-        ItemAnimation rainbow = ItemAnimation.frames(10, List.of(
-                new ItemStack(Material.RED_STAINED_GLASS_PANE),
-                new ItemStack(Material.ORANGE_STAINED_GLASS_PANE),
-                new ItemStack(Material.YELLOW_STAINED_GLASS_PANE),
-                new ItemStack(Material.GREEN_STAINED_GLASS_PANE),
-                new ItemStack(Material.BLUE_STAINED_GLASS_PANE),
-                new ItemStack(Material.PURPLE_STAINED_GLASS_PANE)
-        ));
+    /**
+     * PERFORMANCE DEMO: Paged menu with ALL items
+     */
+    private void openPerformanceDemo(Player player) {
+        // Prepare content slots (everything except the bottom row for navigation)
+        List<Integer> slots = new ArrayList<>();
+        for (int i = 0; i < 45; i++) slots.add(i);
 
-        MenuBuilder.chest(3)
-                .title(Component.text("Animated Menu"))
-                .layout(
-                        "RRRRRRRRR",
-                        "R...C...R",
-                        "RRRRRRRRR"
-                )
-                .bind('R', new AnimatedButton(rainbow))
-                .bind('C', new ItemBuilder(Material.BARRIER).name(Component.text("Back")).build(), e -> openMainMenu(player))
-                .open(player);
-    }
-
-    private void openPagedDemo(Player player) {
-        PagedMenu paged = new PagedMenu(6, List.of(10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 22, 23, 24, 25, 28, 29, 30, 31, 32, 33, 34));
+        PagedMenu paged = new PagedMenu(6, slots);
         
-        // Fill with online players
-        for (Player online : Bukkit.getOnlinePlayers()) {
-            paged.addContent(MenuButton.of(new ItemBuilder(Material.PLAYER_HEAD)
-                    .name(Component.text(online.getName(), NamedTextColor.AQUA))
+        // Add ALL non-air materials
+        for (Material mat : Material.values()) {
+            if (mat.isAir() || !mat.isItem()) continue;
+            paged.addContent(MenuButton.of(ItemBuilder.start(mat)
+                    .name(mm.deserialize("<aqua>" + formatName(mat.name())))
+                    .lore(mm.deserialize("<gray>Internal Name: " + mat.name()))
                     .build()));
         }
 
-        // Add some fillers
+        // Navigation
         paged.setButton(45, paged.createPreviousPageButton());
-        paged.setButton(49, new ItemBuilder(Material.BARRIER).name(Component.text("Back")).build(), e -> openMainMenu(player));
+        paged.setButton(49, ItemBuilder.start(Material.BARRIER).name(mm.deserialize("<red>Back to Menu")).build(), e -> openMainMenu(player));
         paged.setButton(53, paged.createNextPageButton());
 
-        paged.open(player, Component.text("Online Players (Page " + (paged.getCurrentPage() + 1) + ")"));
+        paged.open(player, mm.deserialize("<dark_aqua>Item Browser <gray>(Page " + (paged.getCurrentPage() + 1) + ")"));
     }
 
-    private void setupSharedMenu() {
-        sharedCounterMenu = new BaseMenu(27);
-        updateSharedCounter();
+    /**
+     * ANIMATION DEMO: Complex global animations
+     */
+    private void openAnimationDemo(Player player) {
+        // Rainbow border
+        ItemAnimation rainbow = ItemAnimation.frames(5, Arrays.stream(Material.values())
+                .filter(m -> m.name().contains("_STAINED_GLASS_PANE"))
+                .map(ItemStack::new)
+                .toList());
+
+        // Pulsing core
+        ItemAnimation pulse = ItemAnimation.frames(10, List.of(
+                new ItemStack(Material.NETHER_STAR),
+                new ItemStack(Material.BEACON),
+                new ItemStack(Material.END_CRYSTAL)
+        ));
+
+        MenuBuilder.chest(5)
+                .title(mm.deserialize("<gradient:blue:purple>Dynamic Animations"))
+                .layout(
+                        "RRRRRRRRR",
+                        "R.......R",
+                        "R...P...R",
+                        "R.......R",
+                        "RRRRXRRRR"
+                )
+                .bind('R', new AnimatedButton(rainbow))
+                .bind('P', new AnimatedButton(pulse, e -> player.sendMessage(mm.deserialize("<gold>You clicked the pulsing core!"))))
+                .bind('X', MenuPresets.close())
+                .open(player);
     }
 
-    private void updateSharedCounter() {
-        sharedCounterMenu.setButton(13, new ItemBuilder(Material.GOLD_BLOCK)
-                .name(Component.text("Shared Counter: " + sharedCounter.get(), NamedTextColor.GOLD))
-                .lore(Component.text("Click to increment for everyone!", NamedTextColor.GRAY))
-                .build(), e -> {
-            sharedCounter.incrementAndGet();
-            updateSharedCounter();
-            sharedCounterMenu.updateAll(); // Refresh all viewers
+    /**
+     * ANVIL DEMO: Text Input
+     */
+    private void openAnvilDemo(Player player) {
+        AnvilMenu anvil = new AnvilMenu();
+        
+        anvil.setButton(AnvilMenu.SLOT_INPUT_LEFT, ItemBuilder.start(Material.PAPER)
+                .name(mm.deserialize("<gray>Type something..."))
+                .build());
+
+        anvil.onRename(text -> {
+            player.sendActionBar(mm.deserialize("<yellow>Current Input: <white>" + text));
         });
+
+        anvil.onComplete((text, event) -> {
+            player.sendMessage(mm.deserialize("<green>Submission Successful: <white>" + text));
+            player.closeInventory();
+        });
+
+        anvil.open(player, mm.deserialize("Custom Input"));
+    }
+
+    /**
+     * MERCHANT DEMO: Trading
+     */
+    private void openMerchantDemo(Player player) {
+        MerchantMenu merchant = new MerchantMenu(mm.deserialize("<gold>Legendary Trader"));
+
+        // Add some fun trades
+        merchant.addTrade(new MerchantRecipe(new ItemStack(Material.DIAMOND, 1), 999), 
+                new ItemStack(Material.DIRT, 64), new ItemStack(Material.GRAVEL, 64));
+        
+        merchant.addTrade(new MerchantRecipe(new ItemStack(Material.NETHERITE_INGOT, 1), 5),
+                new ItemStack(Material.DIAMOND_BLOCK, 2));
+
+        merchant.open(player);
+    }
+
+    /**
+     * CRAFTING DEMO: Virtual 3x3
+     */
+    private void openCraftingDemo(Player player) {
+        me.velmax.invlib.special.CraftingMenu crafting = new me.velmax.invlib.special.CraftingMenu();
+        
+        // Add a back button at slot 0 (outside the 3x3 grid)
+        crafting.setButton(0, ItemBuilder.start(Material.BARRIER).name(mm.deserialize("<red>Back")).build(), e -> openMainMenu(player));
+        
+        crafting.open(player, mm.deserialize("Virtual Crafting Table"));
+    }
+
+    private String formatName(String name) {
+        return Arrays.stream(name.split("_"))
+                .map(s -> s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase())
+                .collect(Collectors.joining(" "));
     }
 }

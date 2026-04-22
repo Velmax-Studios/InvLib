@@ -4,4 +4,5 @@ main: me.velmax.invlib.example.InvLibExample
 api-version: 1.21
 commands:
   invlib:
-    description: Open the InvLib showcase menu
+    description: Access the InvLib showcase and performance tools
+    usage: /invlib [performance|animate|input|trade|craft]
