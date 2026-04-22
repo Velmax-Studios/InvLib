@@ -9,14 +9,44 @@ import java.util.function.Consumer;
 
 /**
  * Represents a button in a menu.
- *
- * @param item          The item stack to display.
- * @param clickHandler  The handler for click events.
  */
-public record MenuButton(
-    @NotNull ItemStack item,
-    @Nullable Consumer<InventoryClickEvent> clickHandler
-) {
+public class MenuButton {
+
+    private ItemStack item;
+    private final Consumer<InventoryClickEvent> clickHandler;
+
+    public MenuButton(@NotNull ItemStack item, @Nullable Consumer<InventoryClickEvent> clickHandler) {
+        this.item = item;
+        this.clickHandler = clickHandler;
+    }
+
+    /**
+     * Gets the item stack to display.
+     *
+     * @return The item stack.
+     */
+    public @NotNull ItemStack item() {
+        return item;
+    }
+
+    /**
+     * Sets the item stack to display.
+     *
+     * @param item The item stack.
+     */
+    public void setItem(@NotNull ItemStack item) {
+        this.item = item;
+    }
+
+    /**
+     * Gets the handler for click events.
+     *
+     * @return The click handler.
+     */
+    public @Nullable Consumer<InventoryClickEvent> clickHandler() {
+        return clickHandler;
+    }
+
     /**
      * Creates a button with no click handler.
      *

@@ -32,6 +32,9 @@ public final class InvLib {
         InvLib.plugin = plugin;
         InvLib.manager = new InventoryManager();
         plugin.getServer().getPluginManager().registerEvents(manager, plugin);
+        
+        // Start the animation ticker
+        new me.velmax.invlib.internal.AnimationTicker().runTaskTimer(plugin, 1, 1);
     }
 
     /**
