@@ -80,7 +80,7 @@ menu.setButton(0, animated);
 
 ## 📸 Example
 
-<img src="https://i.postimg.cc/L5KBKkpY/2026-04-22-10-35-53-(online-video-cutter-com).gif" width="100%" alt="Example GIF">
+<img src="https://i.postimg.cc/L5KBKkpY/2026-04-22-10-35-53-%28online-video-cutter-com%29.gif" width="100%" alt="Example GIF">
 
 [![JitPack](https://jitpack.io/v/Velmax-Studios/InvLib.svg)](https://jitpack.io/#Velmax-Studios/InvLib)
 [![Wiki](https://img.shields.io/badge/Wiki-Documentation-cyan)](https://Velmax-Studios.github.io/InvLib/)
