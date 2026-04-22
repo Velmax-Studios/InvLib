@@ -165,7 +165,7 @@ public final class InvLibExample extends JavaPlugin implements CommandExecutor, 
         ));
 
         MenuBuilder.chest(5)
-                .title(mm.deserialize("<gradient:blue:purple>Dynamic Animations"))
+                .title(mm.deserialize("<gradient:#ff00ff:#00ffff><bold>Animation Gallery"))
                 .layout(
                         "RRRRRRRRR",
                         "R.......R",
